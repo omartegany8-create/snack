@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#080f2c">
+<title>محمد التعبان</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+:root{--bg:#070d25;--panel:rgba(14,25,58,.83);--line:rgba(131,164,255,.25);--cyan:#63e8ff;--purple:#ad83ff;--pink:#ff8ed8;--gold:#ffd76b;--text:#f4f3ff;--muted:#b8c4ed}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'Cairo',system-ui,sans-serif;color:var(--text);background:var(--bg)}
+body{overflow-x:hidden;background:radial-gradient(ellipse at 50% 0%,#283a78 0,#111c47 32%,#070d25 75%);min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;background-image:radial-gradient(2px 2px at 20% 30%,#fff 50%,transparent 60%),radial-gradient(1px 1px at 70% 20%,#9feaff 50%,transparent 60%),radial-gradient(2px 2px at 85% 68%,#fff 50%,transparent 60%),radial-gradient(1px 1px at 35% 80%,#fff 50%,transparent 60%);background-size:180px 170px,230px 210px,260px 230px,190px 190px}
+button{font:inherit;color:inherit;cursor:pointer;border:0;touch-action:manipulation}button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.app{width:min(1440px,100%);margin:auto;padding:20px clamp(12px,3vw,36px) 26px;position:relative}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}.logo{font-size:clamp(34px,5vw,66px);line-height:1;font-weight:900;letter-spacing:-2px;background:linear-gradient(180deg,#fff5bf,#ffd26b 38%,#d5a2ff 78%,#92a9ff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 5px 14px #c46dff55)}
+.brand small{display:block;text-align:center;color:#d6d9ff;font-size:12px;letter-spacing:6px;font-weight:800;margin-top:4px}
+.motto{border:1px solid #7489d877;border-radius:50px;background:#101a3ebd;padding:12px 24px;color:#e4d6ff;box-shadow:0 0 30px #7b6dff13;font-weight:800}
+.actions{display:flex;gap:9px}.icon-btn{width:48px;height:48px;border:1px solid var(--line);border-radius:16px;background:#101b40;color:#dce8ff;font-size:21px;box-shadow:inset 0 1px #ffffff10;transition:.2s}.icon-btn:hover{transform:translateY(-2px);border-color:var(--cyan)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;align-items:start}
+.game-column{min-width:0}.board-frame{padding:10px;border-radius:27px;background:linear-gradient(135deg,#3a9dff,#8c6aff 48%,#51dfff);box-shadow:0 0 0 1px #8adfff55,0 18px 65px #258cff2c;position:relative}
+.board-inner{border:1px solid #79cfff;border-radius:17px;overflow:hidden;background:#08152f;position:relative}
+canvas{display:block;width:100%;aspect-ratio:1/1;touch-action:none;background:#08152f}
+.start-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;background:linear-gradient(180deg,#07112dcc,#101744c9);backdrop-filter:blur(5px);transition:opacity .25s}
+.start-overlay.hidden{opacity:0;pointer-events:none}.overlay-card{max-width:390px;width:100%;padding:24px 20px;border:1px solid #91aaff55;border-radius:25px;background:#111c42e8;box-shadow:0 20px 80px #0005}
+.mascot{font-size:62px;filter:drop-shadow(0 0 18px #a28aff)}.overlay-card h2{margin:4px 0 6px;font-size:27px}.overlay-card p{color:var(--muted);margin:0 0 18px;font-size:14px}
+.primary{border-radius:15px;padding:12px 24px;background:linear-gradient(110deg,#7b72ff,#4fcdf6);color:#07132c;font-weight:900;box-shadow:0 8px 25px #6b80ff45;transition:.2s}.primary:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.secondary{border:1px solid var(--line);background:#18254e;border-radius:13px;padding:10px 14px;font-weight:700}.below-board{display:grid;grid-template-columns:1fr 1.5fr;gap:12px;margin-top:14px}
+.tip,.lootbar{border:1px solid var(--line);border-radius:20px;background:var(--panel);padding:13px 16px;display:flex;align-items:center;justify-content:center;gap:12px;min-height:88px}
+.tip-emoji{font-size:37px}.tip strong{display:block;color:#e3c6ff}.tip span{font-size:12px;color:var(--muted)}
+.lootbar{justify-content:space-around}.loot{display:grid;justify-items:center;gap:1px;min-width:42px}.loot i{font-style:normal;font-size:26px;filter:drop-shadow(0 0 8px #ffcf6a55)}.loot b{font-size:12px;color:#e6e9ff}
+.sidebar{display:flex;flex-direction:column;gap:12px}.panel{border:1px solid #7c9de94a;border-radius:22px;padding:15px;background:linear-gradient(145deg,#101b3beF,#0c1532ed);box-shadow:inset 0 1px #ffffff08,0 12px 30px #0002}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{border:1px solid var(--line);border-radius:16px;padding:11px 13px;background:#101a3e}.stat .label{font-size:12px;color:var(--muted)}.stat .value{font-size:26px;font-weight:900;line-height:1.35;color:#f4eaff}.stat .emoji{float:left;font-size:23px}.stat.wide{grid-column:1/-1}
+.panel h3{margin:0 0 10px;font-size:16px;color:#e8d7ff}.abilities{display:grid;gap:8px}
+.ability{display:flex;align-items:center;gap:10px;text-align:right;padding:9px;border:1px solid #657bb638;border-radius:15px;background:#111e42;transition:.2s}
+.ability:hover{border-color:#9d8cff88;transform:translateX(-2px)}.ability:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.ability-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(140deg,#343b99,#171d4e);border:1px solid #9d8cff66;font-size:27px;flex-shrink:0}
+.ability-info{flex:1;min-width:0}.ability-info b{display:block;font-size:13px}.ability-info small{color:var(--muted);font-size:10px;display:block;line-height:1.5}.charges{background:#273660;border-radius:9px;padding:3px 7px;font-size:12px;font-weight:900}
+.controls-note{display:flex;align-items:center;justify-content:space-between;gap:10px}.keys{display:grid;grid-template-columns:repeat(3,31px);grid-template-rows:repeat(2,31px);gap:3px;direction:ltr}.key{background:#263761;border:1px solid #8da5e555;border-radius:8px;display:grid;place-items:center;color:#f1f3ff;font-size:15px}.key:nth-child(1){grid-column:2;grid-row:1}.key:nth-child(2){grid-column:1;grid-row:2}.key:nth-child(3){grid-column:2;grid-row:2}.key:nth-child(4){grid-column:3;grid-row:2}
+.controls-note small{color:var(--muted);font-size:11px;line-height:1.8}
+.bottom-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.bottom-tools button{flex:1;font-size:12px}
+.toast{position:fixed;z-index:20;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#111d40;border:1px solid #8ba5ff77;border-radius:14px;padding:11px 18px;box-shadow:0 10px 40px #0006;transition:.25s;font-size:13px;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal-wrap{position:fixed;inset:0;z-index:30;display:none;place-items:center;padding:18px;background:#02071acc;backdrop-filter:blur(8px)}.modal-wrap.open{display:grid}.modal{width:min(460px,100%);max-height:85vh;overflow:auto;background:#101a3c;border:1px solid #839cff66;border-radius:24px;padding:22px;box-shadow:0 25px 100px #0009}.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.modal h2{font-size:21px;margin:0}.close{background:#26345b;border-radius:10px;width:35px;height:35px}
+.setting{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #ffffff12}.setting label{font-size:14px}.setting select,.setting input{accent-color:#9a8aff;background:#1b2a52;color:white;border:1px solid #6377aa66;border-radius:10px;padding:7px;font:inherit;max-width:155px}
+.leaderboard{display:grid;gap:8px}.rank{display:flex;justify-content:space-between;background:#1a2750;padding:10px 13px;border-radius:12px}.rank:first-child{color:#ffe18a}
+.mobile-pad{display:none;grid-template-columns:repeat(3,54px);grid-template-rows:repeat(2,48px);gap:6px;justify-content:center;margin:15px auto 0;direction:ltr}
+.pad-btn{background:#1b2a55;border:1px solid #8297e966;border-radius:13px;font-size:22px;box-shadow:inset 0 1px #ffffff12}.pad-btn:active{background:#454a9a}
+.footer{text-align:center;color:#8293c5;font-size:11px;margin:20px 0 0}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar .panel:first-child,.sidebar .panel:nth-child(2){grid-column:auto}.motto{order:3;width:100%;text-align:center;padding:9px}.topbar{justify-content:center}.brand{margin-left:auto}.actions{margin-right:auto}.app{padding-top:13px}}
+@media(max-width:560px){.app{padding:12px 10px 20px}.topbar{gap:10px}.logo{font-size:44px}.brand small{font-size:9px;letter-spacing:4px}.icon-btn{width:40px;height:40px;border-radius:13px;font-size:18px}.motto{font-size:12px}.board-frame{padding:6px;border-radius:19px}.board-inner{border-radius:13px}.below-board{grid-template-columns:1fr;gap:8px}.tip,.lootbar{min-height:70px;padding:10px}.sidebar{grid-template-columns:1fr 1fr;gap:8px}.panel{padding:11px;border-radius:17px}.stat-grid{gap:6px}.stat{padding:8px}.stat .value{font-size:22px}.stat .label{font-size:10px}.stat .emoji{font-size:18px}.panel h3{font-size:14px}.ability{padding:7px;gap:6px}.ability-icon{width:38px;height:38px;font-size:21px}.ability-info b{font-size:11px}.ability-info small{font-size:9px}.charges{font-size:10px;padding:2px 5px}.controls-note{display:block}.controls-note small{display:block;margin-bottom:7px}.keys{margin:auto}.mobile-pad{display:grid}.bottom-tools{gap:5px}.bottom-tools button{padding:8px 5px;font-size:10px}.overlay-card{padding:16px}.overlay-card h2{font-size:23px}.mascot{font-size:49px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div><div class="logo"> محمد التعبان</div><small>— S N A K E —</small></div></div>
+    <div class="motto">✨ اجمع النقاط… وكبّر بتاعك!✨</div>
+    <div class="actions">
+      <button class="icon-btn" id="musicBtn" aria-label="الموسيقى" title="تشغيل/إيقاف الصوت">♫</button>
+      <button class="icon-btn" id="soundBtn" aria-label="المؤثرات" title="المؤثرات الصوتية">🔊</button>
+      <button class="icon-btn" id="themeBtn" aria-label="تغيير الثيم" title="تغيير الألوان">🌙</button>
+    </div>
+  </header>
+  <main class="layout">
+    <section class="game-column">
+      <div class="board-frame"><div class="board-inner">
+        <canvas id="game" width="720" height="720" aria-label="لوحة لعبة الثعبان"></canvas>
+        <div class="start-overlay" id="overlay">
+          <div class="overlay-card">
+            <div class="mascot" id="overlayMascot">🐍👑</div>
+            <h2 id="overlayTitle">جاهز للمغامرة؟</h2>
+            <p id="overlayText">اجمع الفواكه والنجوم، افتح قدراتك، وخلّي ثعبانك أسطورة!</p>
+            <button class="primary" id="mainBtn">🚀 ابدأ اللعب</button>
+            <div style="margin-top:12px;color:#aab8e8;font-size:11px">الأسهم أو WASD للتحرك · المس الشاشة للتحكم</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="mobile-pad" aria-label="أزرار الحركة">
+        <button class="pad-btn" data-dir="up">↑</button><button class="pad-btn" data-dir="left">←</button><button class="pad-btn" data-dir="down">↓</button><button class="pad-btn" data-dir="right">→</button>
+      </div>
+      <div class="below-board">
+        <div class="tip"><div class="tip-emoji">🐣</div><div><strong id="tipTitle">خليك سريع!</strong><span id="tipText">النجوم بتديك نقاط أكتر من الفاكهة.</span></div></div>
+        <div class="lootbar">
+          <div class="loot"><i>🍒</i><b>+1</b></div><div class="loot"><i>🪙</i><b>+1</b></div><div class="loot"><i>🍎</i><b>+2</b></div><div class="loot"><i>⭐</i><b>+5</b></div>
+        </div>
+      </div>
+    </section>
+    <aside class="sidebar">
+      <section class="panel">
+        <div class="stat-grid">
+          <div class="stat"><span class="emoji">👑</span><div class="label">النقاط</div><div class="value" id="score">0</div></div>
+          <div class="stat"><span class="emoji">🪙</span><div class="label">العملات</div><div class="value" id="coins">0</div></div>
+          <div class="stat"><span class="emoji">🐍</span><div class="label">طول الثعبان</div><div class="value" id="length">3</div></div>
+          <div class="stat"><span class="emoji">🏆</span><div class="label">أفضل نتيجة</div><div class="value" id="best">0</div></div>
+        </div>
+      </section>
+      <section class="panel">
+        <h3>⚡ قدراتك الخاصة</h3>
+        <div class="abilities">
+          <button class="ability" id="boostBtn"><span class="ability-icon">⚡</span><span class="ability-info"><b>سرعة خاطفة</b><small>اندفاع سريع لمدة قصيرة</small></span><span class="charges" id="boostCount">3</span></button>
+          <button class="ability" id="shieldBtn"><span class="ability-icon">🛡️</span><span class="ability-info"><b>درع الحماية</b><small>ينقذك من اصطدام واحد</small></span><span class="charges" id="shieldCount">2</span></button>
+          <button class="ability" id="growBtn"><span class="ability-icon">🌱</span><span class="ability-info"><b>تسارع النمو</b><small>نقاط وطول إضافي</small></span><span class="charges" id="growCount">1</span></button>
+        </div>
+      </section>
+      <section class="panel">
+        <h3>🎮 مفاتيح التحكم</h3>
+        <div class="controls-note"><div class="keys"><span class="key">↑</span><span class="key">←</span><span class="key">↓</span><span class="key">→</span></div><small>استخدم الأسهم أو WASD<br>مسافة: إيقاف مؤقت<br>1 / 2 / 3: القدرات</small></div>
+        <div class="bottom-tools"><button class="secondary" id="pauseBtn">⏸ إيقاف مؤقت</button><button class="secondary" id="restartBtn">↻ إعادة</button><button class="secondary" id="settingsBtn">⚙ الإعدادات</button></div>
+      </section>
+      <section class="panel">
+        <h3>🌟 إنجازاتك</h3>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:12px;color:var(--muted)">المستوى <b id="level">1</b></span><span style="font-size:12px;color:var(--muted)" id="xpText">0 / 50 XP</span></div>
+        <div style="height:8px;background:#25335c;border-radius:99px;overflow:hidden;margin-top:9px"><div id="xpBar" style="height:100%;width:0%;background:linear-gradient(90deg,#9c79ff,#5ce5ff);border-radius:99px;transition:width .25s"></div></div>
+        <div style="font-size:11px;color:#aab8e8;margin-top:8px" id="achievement">ابدأ اللعب لفتح أول إنجاز ✨</div>
+      </section>
+    </aside>
+  </main>
+  <div class="footer">صُنعت بحب 💜 · الثعبان — مغامرة صغيرة، متعة كبيرة</div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal-wrap" id="modalWrap"><div class="modal">
+  <div class="modal-head"><h2 id="modalTitle">الإعدادات</h2><button class="close" id="closeModal">✕</button></div>
+  <div id="modalContent"></div>
+</div></div>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const canvas=$('game'),ctx=canvas.getContext('2d');
+const N=24,CELL=canvas.width/N;
+const dirs={up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}};
+let snake,dir,nextDir,food,obstacles,items,particles,score,coins,best,level,xp,boosts,shields,grows,shieldTime,boostTime,growTime;
+let running=false,paused=false,over=false,loop=null,lastStep=0,stepMs=145,scoreMultiplier=1,started=false;
+let soundOn=true,musicOn=false,darkTheme=true,combo=0,lastEat=0,frame=0,dragStart=null,audioCtx=null;
+const STORAGE='snakeRoyalSave_v1';
+function loadSave(){try{return JSON.parse(localStorage.getItem(STORAGE))||{best:0,coins:0}}catch(e){return {best:0,coins:0}}}
+let save=loadSave();best=save.best||0;coins=save.coins||0;
+function persist(){try{localStorage.setItem(STORAGE,JSON.stringify({best,coins}))}catch(e){}}
+function rand(n){return Math.floor(Math.random()*n)}
+function same(a,b){return a.x===b.x&&a.y===b.y}
+function occupied(p){return snake?.some(s=>same(s,p))||obstacles?.some(s=>same(s,p))||items?.some(s=>same(s,p))}
+function freeCell(){let p;let tries=0;do{p={x:rand(N),y:rand(N)};tries++}while(occupied(p)&&tries<1000);return p}
+function initGame(){
+ snake=[{x:Math.floor(N/2),y:Math.floor(N/2)},{x:Math.floor(N/2)-1,y:Math.floor(N/2)},{x:Math.floor(N/2)-2,y:Math.floor(N/2)}];
+ dir={...dirs.right};nextDir={...dir};score=0;level=1;xp=0;boosts=3;shields=2;grows=1;shieldTime=0;boostTime=0;growTime=0;scoreMultiplier=1;combo=0;lastEat=0;stepMs=145;particles=[];items=[];obstacles=[];
+ for(let i=0;i<9;i++){let p=freeCell();obstacles.push(p)}
+ food=freeCell();spawnItems();updateHud();draw();
+}
+function spawnItems(){
+ items=items.filter(i=>i.life>0);
+ const types=[{type:'coin',emoji:'🪙',value:1},{type:'star',emoji:'⭐',value:5},{type:'apple',emoji:'🍎',value:2},{type:'cherry',emoji:'🍒',value:1}];
+ while(items.length<5){let t=types[rand(types.length)],p=freeCell();items.push({...p,...t,life:600+rand(500),phase:Math.random()*6})}
+ if(!items.some(i=>i.type==='power')&&Math.random()<.012){let p=freeCell();items.push({...p,type:'power',emoji:'💎',value:8,life:500,phase:0})}
+}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),1900)}
+function beep(freq=440,duration=.07,type='sine',vol=.035){if(!soundOn)return;try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.value=vol;g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+duration)}catch(e){}}
+function addParticles(x,y,color,count=12){for(let i=0;i<count;i++){let a=Math.random()*Math.PI*2,s=1+Math.random()*3;particles.push({x:x*CELL+CELL/2,y:y*CELL+CELL/2,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:25+rand(20),max:45,color,size:2+Math.random()*4})}}
+function setDirection(name){const d=dirs[name];if(!d||!running||paused||over)return;if(d.x===-dir.x&&d.y===-dir.y)return;nextDir={...d}}
+function startGame(){if(over||!snake)initGame();running=true;paused=false;over=false;started=true;$('overlay').classList.add('hidden');$('pauseBtn').textContent='⏸ إيقاف مؤقت';lastStep=performance.now();if(loop)cancelAnimationFrame(loop);loop=requestAnimationFrame(tick);beep(540,.08);toast('يلا بينا! بالتوفيق 🐍')}
+function endGame(){running=false;over=true;paused=false;if(loop)cancelAnimationFrame(loop);if(score>best){best=score;persist();toast('🏆 رقم قياسي جديد!')}else persist();$('overlayMascot').textContent='💫🐍';$('overlayTitle').textContent='انتهت الجولة!';$('overlayText').textContent=`جمعت ${score} نقطة ووصلت للمستوى ${level}. جرّب مرة تانية وحط رقم قياسي جديد!`;$('mainBtn').textContent='🔁 العب من جديد';$('overlay').classList.remove('hidden');updateHud();beep(180,.25,'triangle')}
+function togglePause(){if(!started||over){return}if(paused){paused=false;running=true;$('pauseBtn').textContent='⏸ إيقاف مؤقت';lastStep=performance.now();loop=requestAnimationFrame(tick);$('overlay').classList.add('hidden')}else{paused=true;running=false;$('pauseBtn').textContent='▶ متابعة';$('overlayMascot').textContent='⏸️';$('overlayTitle').textContent='استراحة محارب';$('overlayText').textContent='خد نفسك… ثعبانك مستنيك!';$('mainBtn').textContent='▶ كمّل اللعب';$('overlay').classList.remove('hidden');if(loop)cancelAnimationFrame(loop)}}
+function useAbility(type){
+ if(!started||over||paused){toast('ابدأ الجولة الأول 😉');return}
+ if(type==='boost'&&boosts>0){boosts--;boostTime=2200;toast('⚡ سرعة خاطفة!');beep(740,.12,'sawtooth')}
+ else if(type==='shield'&&shields>0){shields--;shieldTime=6500;toast('🛡️ الدرع فعّال!');beep(620,.12,'triangle')}
+ else if(type==='grow'&&grows>0){grows--;growTime=5000;scoreMultiplier=2;score+=5;xp+=5;toast('🌱 مضاعفة النقاط!');beep(880,.12,'sine')}
+ else {toast('خلصت شحنات القدرة! اجمع 💎');return}
+ updateHud();
+}
+function eatItem(item){
+ const now=performance.now();combo=now-lastEat<2300?combo+1:1;lastEat=now;
+ const mult=scoreMultiplier;score+=item.value*mult;xp+=item.value; if(item.type==='coin'){coins++;persist()} if(item.type==='power'){const ability=rand(3);if(ability===0)boosts=Math.min(9,boosts+1);else if(ability===1)shields=Math.min(9,shields+1);else grows=Math.min(9,grows+1);toast('💎 شحنة قدرة جديدة!')}
+ if(item.type==='star')toast('⭐ ممتاز! نقاط إضافية');else if(combo>=3)toast(`🔥 كومبو ×${combo}!`);
+ snake.push({...snake[snake.length-1]});addParticles(item.x,item.y,item.type==='star'?'#ffdc73':'#ff88d5',18);beep(item.type==='star'?880:620,.07);
+ while(xp>=level*50){xp-=level*50;level++;stepMs=Math.max(70,stepMs-4);toast(`🎉 وصلت للمستوى ${level}!`);addParticles(snake[0].x,snake[0].y,'#77eaff',28)}
+ updateHud();
+}
+function tick(now){if(!running)return;let dt=now-lastStep;const effective=boostTime>0?Math.max(55,stepMs*.52):stepMs;if(dt>=effective){lastStep=now;step();}draw();loop=requestAnimationFrame(tick)}
+function step(){
+ dir={...nextDir};const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+ if(window.wrapOn){head.x=(head.x+N)%N;head.y=(head.y+N)%N}
+ const wall=head.x<0||head.y<0||head.x>=N||head.y>=N;
+ const self=snake.slice(0,-1).some(s=>same(s,head));
+ const rock=obstacles.some(s=>same(s,head));
+ if(wall||self||rock){
+  if(shieldTime>0){shieldTime=0;addParticles(snake[0].x,snake[0].y,'#72e5ff',25);toast('🛡️ الدرع أنقذك!');beep(320,.13,'triangle');return}
+  endGame();return;
+ }
+ snake.unshift(head);
+ if(same(head,food)){score+=2*scoreMultiplier;xp+=2;snake.push({...snake[snake.length-1]});addParticles(food.x,food.y,'#ff7a9e',18);food=freeCell();beep(700,.06);while(xp>=level*50){xp-=level*50;level++;stepMs=Math.max(70,stepMs-4);toast(`🎉 المستوى ${level}!`)}}
+ else snake.pop();
+ const idx=items.findIndex(i=>same(i,head));if(idx>=0){const it=items[idx];eatItem(it);items.splice(idx,1);spawnItems()}
+ if(boostTime>0)boostTime-=stepMs;if(shieldTime>0)shieldTime-=stepMs;if(growTime>0){growTime-=stepMs;if(growTime<=0)scoreMultiplier=1}
+ items.forEach(i=>i.life--);items=items.filter(i=>i.life>0);spawnItems();updateHud();
+}
+function updateHud(){
+ $('score').textContent=score||0;$('coins').textContent=coins||0;$('length').textContent=snake?.length||3;$('best').textContent=Math.max(best,score||0);$('level').textContent=level||1;
+ $('xpText').textContent=`${xp||0} / ${(level||1)*50} XP`;$('xpBar').style.width=`${Math.min(100,(xp/((level||1)*50))*100)}%`;
+ $('boostCount').textContent=boosts??3;$('shieldCount').textContent=shields??2;$('growCount').textContent=grows??1;
+ $('boostBtn').disabled=boosts<=0;$('shieldBtn').disabled=shields<=0;$('growBtn').disabled=grows<=0;
+ $('achievement').textContent=score>=100?'🏅 صياد النقاط — إنجاز رائع!':score>=30?'✨ جامع الفواكه — استمر!':started?'كل لقمة تقرّبك من الإنجاز':'ابدأ اللعب لفتح أول إنجاز ✨';
+}
+function roundedRect(c,x,y,w,h,r){c.beginPath();c.roundRect?c.roundRect(x,y,w,h,r):(c.rect(x,y,w,h));}
+function drawCellGlow(x,y,color,r=18){ctx.save();ctx.shadowColor=color;ctx.shadowBlur=r;ctx.fillStyle=color;ctx.beginPath();ctx.arc((x+.5)*CELL,(y+.5)*CELL,5,0,Math.PI*2);ctx.fill();ctx.restore()}
+function draw(){
+ frame++;const W=canvas.width,H=canvas.height;ctx.clearRect(0,0,W,H);
+ const grad=ctx.createLinearGradient(0,0,W,H);grad.addColorStop(0,darkTheme?'#091633':'#1c2856');grad.addColorStop(1,darkTheme?'#101b3b':'#34336b');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+ // soft light pools
+ const glow=ctx.createRadialGradient(W*.5,H*.4,10,W*.5,H*.4,W*.7);glow.addColorStop(0,'#5d71cf12');glow.addColorStop(1,'#050b1f00');ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
+ ctx.strokeStyle=darkTheme?'#6e9cff20':'#a3d5ff24';ctx.lineWidth=1;
+ for(let i=0;i<=N;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,H);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(W,i*CELL);ctx.stroke()}
+ // tiny stars
+ for(let i=0;i<24;i++){let x=(i*137+39)%W,y=(i*211+17)%H;ctx.globalAlpha=.22+.2*Math.sin(frame*.04+i);ctx.fillStyle='#b8eaff';ctx.fillRect(x,y,2,2)}ctx.globalAlpha=1;
+ // obstacles
+ obstacles.forEach((o,i)=>{const x=o.x*CELL+5,y=o.y*CELL+5,s=CELL-10;ctx.save();ctx.shadowColor='#000';ctx.shadowBlur=7;const g=ctx.createLinearGradient(x,y,x+s,y+s);g.addColorStop(0,'#626d8c');g.addColorStop(1,'#333d5d');ctx.fillStyle=g;roundedRect(ctx,x,y,s,s,8);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#a3b4df55';ctx.stroke();ctx.fillStyle='#aab7dc30';ctx.beginPath();ctx.moveTo(x+7,y+9);ctx.lineTo(x+s*.55,y+5);ctx.lineTo(x+s*.35,y+s*.35);ctx.closePath();ctx.fill();ctx.restore()});
+ // ordinary food
+ drawFood(food.x,food.y,'🍓',0);
+ items.forEach(it=>{const pulse=1+Math.sin(frame*.12+(it.phase||0))*.09;const cx=(it.x+.5)*CELL,cy=(it.y+.5)*CELL;ctx.save();ctx.translate(cx,cy);ctx.scale(pulse,pulse);if(it.type==='star'||it.type==='power'||it.type==='coin'){const col=it.type==='star'?'#ffcf63':it.type==='power'?'#6de9ff':'#ffc95b';ctx.shadowColor=col;ctx.shadowBlur=17;ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,0,CELL*.27,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0}ctx.font=`${CELL*.7}px "Apple Color Emoji","Segoe UI Emoji",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(it.emoji,0,1);ctx.restore()});
+ // snake segments
+ snake.forEach((s,i)=>{const cx=(s.x+.5)*CELL,cy=(s.y+.5)*CELL;const r=CELL*(i===0?.43:.39);ctx.save();ctx.shadowColor=i===0?'#70dfff':'#a77aff';ctx.shadowBlur=i===0?22:12;const palettes={purple:['#e5fcff','#75ddff','#4b68c8','#d1a8ff','#8b80f6','#5554b9'],blue:['#e4fbff','#62dfff','#2877c7','#b7f3ff','#63b7f6','#3156ad'],pink:['#fff0fb','#ff9fe0','#c24c9b','#ffd2f2','#f27bc9','#a63d86'],green:['#effff6','#7ff0bd','#258d76','#c6ffe1','#62dba7','#267f69']};const pal=palettes[window.snakeTheme||'purple']||palettes.purple;const g=ctx.createRadialGradient(cx-r*.4,cy-r*.5,2,cx,cy,r*1.3);g.addColorStop(0,i===0?pal[0]:(i%2?pal[3]:pal[4]));g.addColorStop(.45,i===0?pal[1]:(i%2?pal[3]:pal[4]));g.addColorStop(1,i===0?pal[2]:pal[5]);ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#e0d7ff75';ctx.lineWidth=1.5;ctx.stroke();if(i===0){drawFace(cx,cy,r)}ctx.restore()});
+ if(shieldTime>0&&snake.length){const h=snake[0],cx=(h.x+.5)*CELL,cy=(h.y+.5)*CELL;ctx.save();ctx.strokeStyle='#62e9ff';ctx.lineWidth=3;ctx.shadowColor='#62e9ff';ctx.shadowBlur=20;ctx.beginPath();ctx.arc(cx,cy,CELL*.61,0,Math.PI*2);ctx.stroke();ctx.restore()}
+ // particles
+ particles=particles.filter(p=>p.life>0);particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vx*=.96;p.vy*=.96;p.life--;ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill()});ctx.globalAlpha=1;
+ if(boostTime>0){ctx.fillStyle='#9eefff';ctx.font='bold 16px Cairo';ctx.textAlign='left';ctx.fillText('⚡ BOOST',14,25)}
+ if(shieldTime>0){ctx.fillStyle='#8cf3ff';ctx.font='bold 15px Cairo';ctx.textAlign='right';ctx.fillText('🛡️',W-12,25)}
+}
+function drawFace(cx,cy,r){const dx=dir.x,dy=dir.y;const fx=cx+dx*r*.22,fy=cy+dy*r*.22;const px=-dy,py=dx;for(let side of [-1,1]){let ex=fx+dx*r*.16+px*r*.28*side,ey=fy+dy*r*.16+py*r*.28*side;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(ex,ey,r*.19,0,Math.PI*2);ctx.fill();ctx.fillStyle='#17214a';ctx.beginPath();ctx.arc(ex+dx*r*.06,ey+dy*r*.06,r*.105,0,Math.PI*2);ctx.fill()}ctx.fillStyle='#fff0a6';ctx.font=`${r*.8}px sans-serif`;ctx.textAlign='center';ctx.fillText('♛',cx,cy-r*.95)}
+function drawFood(x,y,emoji){const cx=(x+.5)*CELL,cy=(y+.5)*CELL;ctx.save();ctx.shadowColor='#ff769f';ctx.shadowBlur=19;ctx.fillStyle='#ff769f';ctx.beginPath();ctx.arc(cx,cy,CELL*.27,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.font=`${CELL*.69}px "Apple Color Emoji","Segoe UI Emoji",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(emoji,cx,cy+1);ctx.restore()}
+function showModal(title,content){$('modalTitle').textContent=title;$('modalContent').innerHTML=content;$('modalWrap').classList.add('open')}
+function closeModal(){$('modalWrap').classList.remove('open')}
+function settings(){showModal('⚙ إعدادات اللعبة',`
+<div class="setting"><label for="difficulty">مستوى الصعوبة</label><select id="difficulty"><option value="easy">هادئ 🌿</option><option value="normal" selected>متوازن ✨</option><option value="hard">تحدّي 🔥</option></select></div>
+<div class="setting"><label for="obstaclesToggle">العوائق في اللوحة</label><input id="obstaclesToggle" type="checkbox" checked></div>
+<div class="setting"><label for="wrapToggle">العبور من حواف اللوحة</label><input id="wrapToggle" type="checkbox"></div>
+<div class="setting"><label for="soundToggle">المؤثرات الصوتية</label><input id="soundToggle" type="checkbox" ${soundOn?'checked':''}></div>
+<div class="setting"><label for="themeSelect">لون الثعبان</label><select id="themeSelect"><option value="purple">بنفسجي ملكي 💜</option><option value="blue">أزرق سماوي 💙</option><option value="pink">وردي 🍬</option><option value="green">أخضر نعناعي 💚</option></select></div>
+<p style="font-size:11px;color:#aab8e8;line-height:1.8">الإعدادات تتطبق على الجولة الحالية أو التالية. أفضل نتيجة والعملات بيتحفظوا على جهازك.</p>
+<button class="primary" id="saveSettings" style="width:100%">حفظ الإعدادات</button>`);
+$('difficulty').value=window.difficulty||'normal';$('obstaclesToggle').checked=window.obstaclesOn!==false;$('wrapToggle').checked=window.wrapOn===true;$('themeSelect').value=window.snakeTheme||'purple';
+$('saveSettings').onclick=()=>{window.difficulty=$('difficulty').value;window.obstaclesOn=$('obstaclesToggle').checked;window.wrapOn=$('wrapToggle').checked;soundOn=$('soundToggle').checked;window.snakeTheme=$('themeSelect').value;stepMs=window.difficulty==='easy'?175:window.difficulty==='hard'?110:145;if(!window.obstaclesOn)obstacles=[];else if(obstacles.length===0){for(let i=0;i<9;i++){let p=freeCell();obstacles.push(p)}};closeModal();toast('تم حفظ الإعدادات ✨');draw()};
+}
+function leaderboard(){showModal('🏆 لوحة الأبطال',`<div class="leaderboard"><div class="rank"><span>👑 أفضل نتيجة لك</span><b>${Math.max(best,score||0)} نقطة</b></div><div class="rank"><span>🪙 العملات المجمّعة</span><b>${coins}</b></div><div class="rank"><span>🐍 أطول ثعبان حالي</span><b>${snake?.length||3}</b></div><div class="rank"><span>✨ المستوى الحالي</span><b>${level||1}</b></div></div><p style="color:#aab8e8;font-size:12px;margin-top:14px">الأرقام محفوظة محليًا على نفس الجهاز والمتصفح.</p><button class="secondary" id="resetRecord" style="width:100%">مسح أفضل نتيجة والعملات</button>`);$('resetRecord').onclick=()=>{best=0;coins=0;persist();updateHud();closeModal();toast('تم مسح السجل')}}
+$('mainBtn').addEventListener('click',()=>{if(paused&&!over){togglePause();return}initGame();startGame()});
+$('pauseBtn').addEventListener('click',togglePause);$('restartBtn').addEventListener('click',()=>{initGame();startGame()});
+$('boostBtn').addEventListener('click',()=>useAbility('boost'));$('shieldBtn').addEventListener('click',()=>useAbility('shield'));$('growBtn').addEventListener('click',()=>useAbility('grow'));
+$('settingsBtn').addEventListener('click',settings);$('closeModal').addEventListener('click',closeModal);$('modalWrap').addEventListener('click',e=>{if(e.target===$('modalWrap'))closeModal()});
+$('soundBtn').addEventListener('click',()=>{soundOn=!soundOn;$('soundBtn').textContent=soundOn?'🔊':'🔇';toast(soundOn?'الصوت شغّال':'الصوت مكتوم');if(soundOn)beep(600)});
+$('musicBtn').addEventListener('click',()=>{musicOn=!musicOn;$('musicBtn').style.color=musicOn?'#76eaff':'#dce8ff';toast(musicOn?'الموسيقى غير متاحة بدون ملفات صوت خارجية 🎵':'تم إيقاف الموسيقى')});
+$('themeBtn').addEventListener('click',()=>{darkTheme=!darkTheme;$('themeBtn').textContent=darkTheme?'🌙':'☀️';draw()});
+window.addEventListener('keydown',e=>{const map={ArrowUp:'up',w:'up',W:'up',ArrowDown:'down',s:'down',S:'down',ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right'};if(map[e.key]){e.preventDefault();setDirection(map[e.key]);if(!started&&!over)startGame()}if(e.code==='Space'){e.preventDefault();if(started)togglePause()}if(e.key==='1')useAbility('boost');if(e.key==='2')useAbility('shield');if(e.key==='3')useAbility('grow');if(e.key==='Escape')closeModal()});
+document.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>{setDirection(b.dataset.dir);if(!started&&!over)startGame()}));
+canvas.addEventListener('pointerdown',e=>{dragStart={x:e.clientX,y:e.clientY};canvas.setPointerCapture?.(e.pointerId)});
+canvas.addEventListener('pointerup',e=>{if(!dragStart)return;const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;if(Math.max(Math.abs(dx),Math.abs(dy))>18){setDirection(Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up'));if(!started&&!over)startGame()}dragStart=null});
+$('best').textContent=best;$('coins').textContent=coins;
+initGame();
+})();
+</script>
+</body>
+</html>
